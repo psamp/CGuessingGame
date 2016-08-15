@@ -8,21 +8,38 @@
 
 #import <Foundation/Foundation.h>
 
+bool getStringFromUser(char name[], int nameLength);
 int getNumberFromUser(int maxValidChoice);
+bool play (char name[], NSNumber *number, NSMutableArray *guessesDestination);
 
 int main(int argc, const char * argv[]) {
     
     NSNumber *number = @(arc4random_uniform(10));
     NSMutableArray *allGuesses  = [NSMutableArray array];
-    bool anyGuessesRight = false;
     
-    for (int i = 0; i < 3; i++) {
-        
-        NSLog(@"I'm thinking of a number 0-9. You're on guess %d/3.", i + 1);
-        [allGuesses addObject: @(getNumberFromUser(9))];
+    NSLog(@"What's your name?");
+    char name[30];
+    getStringFromUser(name, 30);
+    
+    bool playing = play(name, number, allGuesses);
+    
+    while(playing) {
+        playing = play(name, number, allGuesses);
     }
     
-    for (NSNumber *guess in allGuesses) {
+    return 0;
+}
+
+bool play (char name[], NSNumber *number, NSMutableArray *guessesDestination) {
+    
+    NSLog(@"NUM: %@", number);
+    
+    bool anyGuessesRight = false;
+    
+    NSLog(@"Hello, %s. I'm thinking of a number 0-9.", name);
+    [guessesDestination addObject: @(getNumberFromUser(9))];
+    
+    for (NSNumber *guess in guessesDestination) {
         
         if ([guess isEqual: number]) {
             anyGuessesRight = true;
@@ -30,17 +47,31 @@ int main(int argc, const char * argv[]) {
     }
     
     if (!anyGuessesRight) {
-        NSLog(@"Wrong! I'm thinking of %@.", number);
-        NSLog(@"You guessed: %@", allGuesses);
+        NSLog(@"Wrong! You guessed: %@", guessesDestination);
+        NSLog(@"Would you like to guess again? Enter 1 for yes, and any other number to quit:");
+        
+        int guessAgain = getNumberFromUser(1);
+        
+        switch (guessAgain) {
+            case 1: {
+                return true;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+        
     } else {
-        NSLog(@"Right! I was thinking of %@.", number);
+        NSLog(@"Right, %s! I was thinking of %@.", name, number);
     }
     
-    return 0;
+    return false;
 }
 
 bool getStringFromUser(char name[], int nameLength) {
     char *result = NULL;
+    
     while (result != name) {
         fpurge(stdin);
         result = fgets(name, nameLength, stdin);
