@@ -31,7 +31,6 @@ int main(int argc, const char * argv[]) {
 }
 
 bool play (char name[], NSNumber *number, NSMutableArray *guessesDestination) {
-    
     bool anyGuessesRight = false;
     
     NSLog(@"Hello, %s. I'm thinking of a number 0-9.", name);
