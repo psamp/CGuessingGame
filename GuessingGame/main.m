@@ -33,8 +33,12 @@ int main(int argc, const char * argv[]) {
 bool play (char name[], NSNumber *number, NSMutableArray *guessesDestination) {
     bool anyGuessesRight = false;
     
-    NSLog(@"Hello, %s. I'm thinking of a number 0-9.", name);
-    [guessesDestination addObject: @(getNumberFromUser(9))];
+    NSLog(@"Hello, %@. I'm thinking of a number 0-9.", @(name));
+    
+    for(int i = 0; i < 3; i++) {
+        NSLog(@"Guess %d/3:", i+1);
+        [guessesDestination addObject: @(getNumberFromUser(9))];
+    }
     
     for (NSNumber *guess in guessesDestination) {
         
@@ -44,7 +48,7 @@ bool play (char name[], NSNumber *number, NSMutableArray *guessesDestination) {
     }
     
     if (!anyGuessesRight) {
-        NSLog(@"Wrong! You guessed: %@", guessesDestination);
+        NSLog(@"Wrong! Your previous guesses are: %@", guessesDestination);
         NSLog(@"Would you like to guess again? Enter 1 for yes, and any other number to quit:");
         
         int guessAgain = getNumberFromUser(1);
